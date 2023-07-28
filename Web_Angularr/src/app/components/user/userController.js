@@ -1,8 +1,6 @@
 const { getDataFromDBService, createUserDBService, updateUserDBService, removeUserDBService } = require("./userService");
 const userModel = require('./userModel');
 
-const { users } = require("C:/angular/Web_Angular/src/index.js");
-
 const getDataControllerfn = async (req, res) => {
   try {
     const employee = await getDataFromDBService();
@@ -11,7 +9,6 @@ const getDataControllerfn = async (req, res) => {
     res.status(500).send({ status: false, message: "Error getting data", error });
   }
 };
-
 const updateUserController = async (req, res) => {
   try {
     await updateUserDBService(req.params.id, req.body);
@@ -30,10 +27,26 @@ const deleteUserController = async (req, res) => {
   }
 };
 
+// const createUserControllerFn = async (req, res) => {
+//   console.log("im here")
+//   try {
+//     console.log('Received data:', req.body); // Log the received data
+
+//     await createUserDBService(req.body);
+//     res.send({ status: true, message: "User created successfully" });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({ status: false, message: "Error creating user", error: error });
+//   }
+// };
+
 const createUserControllerFn = async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
+    // ... (existing code for validation)
+
+    // Create a new user document using the Mongoose model and save it to the database
     const isUserCreated = await createUserDBService(req.body);
     if (isUserCreated) {
       return res.status(201).json({ status: true, message: 'Kullanıcı kaydı başarıyla oluşturuldu.' });
@@ -51,31 +64,24 @@ const userLoginControllerFn = async (req, res) => {
     const { username, password } = req.body;
     console.log('Received login request for user:', username);
 
-    // Veritabanında kullanıcıyı arayın ve kimlik doğrulamasını yapın.
-    const user = await userModel.findOne({ username, password });
+    // ... (existing code for validation and password comparison)
 
     // Log the result of the login attempt
     console.log('Login attempt result:', user ? 'Success' : 'Failure');
 
-    if (user) {
-      // Handle successful login (send response or redirect)
-      // ...
-
-      return { status: true, user }; // Return the user object if login is successful
-    } else {
-      // Handle unsuccessful login (send response or redirect)
-      // ...
-
-      // Push the failed login attempt into the users array
-      users.push({ username, password });
-
-      return { status: false }; // Return false if login fails
-    }
+    // ... (existing code for response handling)
   } catch (error) {
     console.log(error);
-    throw error; // Rethrow the error to be caught in the try-catch block in the login route
+    return res.status(500).json({ status: false, message: 'Error during login', error: error.message || 'Unknown error' });
   }
 };
+
+
+
+
+
+
+
 
 module.exports = {
   getDataControllerfn,

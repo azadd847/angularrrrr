@@ -17,7 +17,7 @@ server.use(cors());
 server.use(express.json());
 
 // Kullanıcıları saklayacak basit bir dizi
-const users = []; // bak bu bos o yuzden undefined cikmis ilk once sana o da gosterim 
+const users = [];
 
 // Signup Rota
 server.post('/signup', (req, res) => {
@@ -34,34 +34,20 @@ server.post('/signup', (req, res) => {
 });
 
 // Login Rota
-// Login Rota
-server.post("/login", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    console.log('Received login request for user:', username);
-
-    if (!username || !password) {
-      return res.status(400).json({ message: 'Kullanıcı adı ve şifre giriniz.' });
-    }
-
-    // Assuming you have the userLoginControllerFn available from the userController module
-    const { userLoginControllerFn } = require("./app/components/user/userController");
-
-    // Call the userLoginControllerFn to handle user login and get the response
-    const loginResponse = await userLoginControllerFn(req, res);
-
-    // Use the response received from the controller to send the appropriate response to the client
-    if (loginResponse.status) {
-      return res.status(200).json({ status: true, message: 'Giriş başarılı.', user: loginResponse.user });
-    } else {
-      return res.status(401).json({ status: false, message: 'Kullanıcı adı veya şifre yanlış.' });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ status: false, message: 'Error during login', error: error.message || 'Unknown error' });
+server.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Kullanıcı adı ve şifre giriniz.' });
   }
-});
 
+  // Veritabanında kullanıcıyı arayın ve kimlik doğrulamasını yapın.
+  const user = users.find((u) => u.username === username && u.password === password);
+  if (!user) {
+    return res.status(401).json({ message: 'Kullanıcı adı veya şifre yanlış.' });
+  }
+
+  return res.status(200).json({ message: 'Giriş başarılı.' });
+});
 
 // Use the routes defined in separate files
 server.use(routes);

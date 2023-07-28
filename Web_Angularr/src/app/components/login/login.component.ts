@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 export class LoginComponent {
   username: string = "";
   password: string = "";
- email: string = "";
+
   constructor(private router: Router, private http: HttpClient) {} // Router and HttpClient injection
 
   onLogin() {
@@ -26,9 +26,7 @@ export class LoginComponent {
       // Create a payload with the username and password
       const loginData = {
         username: this.username,
-        password: this.password,
-        email: this.email
-
+        password: this.password
       };
 
       // Send a POST request to the server for login

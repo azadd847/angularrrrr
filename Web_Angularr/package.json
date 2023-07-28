@@ -21,7 +21,6 @@
     "@angular/platform-browser": "^16.1.0",
     "@angular/platform-browser-dynamic": "^16.1.0",
     "@angular/router": "^16.1.0",
-    "again": "^0.0.1",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.3.0",

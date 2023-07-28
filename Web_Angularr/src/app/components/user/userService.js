@@ -93,33 +93,3 @@ module.exports.removeUserDBService = (id) => {
       .catch(() => reject(false));
   });
 };
-
-module.exports.userLoginControllerFn = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    console.log('Received login request for user:', username);
-
-    if (!username || !password) {
-      return res.status(400).json({ status: false, message: 'Username and password are required.' });
-    }
-
-    const user = await userModel.findOne({ username });
-
-    if (!user) {
-      return res.status(404).json({ status: false, message: 'User not found.' });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    
-    if (!isPasswordValid) {
-      return res.status(401).json({ status: false, message: 'Invalid password.' });
-    }
-
-    return res.status(200).json({ status: true, message: 'Login successful.', user });
-
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ status: false, message: 'Error during login', error: error.message || 'Unknown error' });
-  }
-};
