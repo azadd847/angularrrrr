@@ -1,3 +1,4 @@
+
 const userModel = require("./userModel");
 const bcrypt = require('bcrypt');
 
@@ -35,17 +36,14 @@ module.exports.createUserDBService = (userDetails) => {
 
 module.exports.createUserDBService = async (userDetails) => {
   try {
-    const { firstName, lastName, dob, gender, address, username, password, email } = userDetails;
-    // Check if the required fields (username, password, and email) are present in the request body
+    const { firstName, lastName, dob, gender, address } = userDetails;
     if (!username || !password || !email) {
       throw new Error('Tüm alanları doldurunuz.');
     }
 
-    // Hash the password before saving it to the database
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Create a new user document using the Mongoose model and save it to the database
     const newUser = new userModel({
       firstName,
       lastName,
@@ -53,7 +51,7 @@ module.exports.createUserDBService = async (userDetails) => {
       gender,
       address,
       username,
-      password: hashedPassword,
+      password,
       email,
     });
 

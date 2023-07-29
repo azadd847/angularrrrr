@@ -1,3 +1,5 @@
+const users = [];
+
 const express = require("express");
 const server = express();
 const routes = require("./routes/routes");
@@ -16,24 +18,31 @@ db.once('open', function() {
 server.use(cors());
 server.use(express.json());
 
-// Kullanıcıları saklayacak basit bir dizi
-const users = []; // bak bu bos o yuzden undefined cikmis ilk once sana o da gosterim 
-
 // Signup Rota
-server.post('/signup', (req, res) => {
+server.post('/signup', async (req, res) => {
   const { username, password, email } = req.body;
   if (!username || !password || !email) {
     return res.status(400).json({ message: 'Tüm alanları doldurunuz.' });
   }
 
-  // Yeni kullanıcıyı oluşturun ve veritabanına ekleyin.
-  const newUser = { username, password, email };
-  users.push(newUser);
+  try {
+    // Assuming you have the createUserControllerFn available from the userController module
+    const { createUserControllerFn } = require("./app/components/user/userController");
 
-  return res.status(201).json({ message: 'Kullanıcı kaydı başarıyla oluşturuldu.' });
+    // Call the createUserControllerFn to handle user creation and get the response
+    const isUserCreated = await createUserControllerFn(req.body);
+
+    if (isUserCreated) {
+      return res.status(201).json({ message: 'Kullanıcı kaydı başarıyla oluşturuldu.' });
+    } else {
+      throw new Error('Error creating user');
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Error during user creation', error: error.message || 'Unknown error' });
+  }
 });
 
-// Login Rota
 // Login Rota
 server.post("/login", async (req, res) => {
   try {
@@ -61,7 +70,6 @@ server.post("/login", async (req, res) => {
     return res.status(500).json({ status: false, message: 'Error during login', error: error.message || 'Unknown error' });
   }
 });
-
 
 // Use the routes defined in separate files
 server.use(routes);

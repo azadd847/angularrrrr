@@ -1,7 +1,9 @@
+const users = [];
+
 const { getDataFromDBService, createUserDBService, updateUserDBService, removeUserDBService } = require("./userService");
 const userModel = require('./userModel');
 
-const { users } = require("C:/angular/Web_Angular/src/index.js");
+// const { users } = require("C:/angular/Web_Angular/src/index.js");
 
 const getDataControllerfn = async (req, res) => {
   try {
@@ -58,22 +60,19 @@ const userLoginControllerFn = async (req, res) => {
     console.log('Login attempt result:', user ? 'Success' : 'Failure');
 
     if (user) {
-      // Handle successful login (send response or redirect)
       // ...
 
-      return { status: true, user }; // Return the user object if login is successful
+      return { status: true, user }; 
     } else {
-      // Handle unsuccessful login (send response or redirect)
-      // ...
+ü      // ...
 
-      // Push the failed login attempt into the users array
       users.push({ username, password });
 
-      return { status: false }; // Return false if login fails
+      return { status: false }; 
     }
   } catch (error) {
     console.log(error);
-    throw error; // Rethrow the error to be caught in the try-catch block in the login route
+    throw error; 
   }
 };
 
